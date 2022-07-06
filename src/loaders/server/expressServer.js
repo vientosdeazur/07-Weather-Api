@@ -2,10 +2,12 @@ const express = require('express');
 const morgan = require('morgan');
 const { listen } = require('express/lib/application');
 const config = require('../../config');
-const {routes} = require('../../routes/users.routes');
+const {routes} = require('../../routes/weather.routes');
 const res = require('express/lib/response');
 const logger = require('../loggers/index'); 
 const swaggerUi = require ('swagger-ui-express');
+
+
 class ExpressServer {
 
     constructor(){
@@ -13,7 +15,7 @@ class ExpressServer {
         this.port = config.port;
         this._middlewares();
         this._swagerConfig();
-        this.basePath = ''; //config.api.prefix
+        this.basePathWeather = `${config.api.prefix}/weather`; 
         this._routes();
         this._notFound();
         this._errorHandler();
@@ -26,10 +28,12 @@ class ExpressServer {
     }
         
     _routes (){
-        this.app.use (`${this.basePath}`, routes);
+        this.app.use (`${this.basePathWeather}`, routes);
         this.app.head("/status", (req,res)=> {
             res.status(200).end();
         })
+
+        
     }
 
     _notFound() {
