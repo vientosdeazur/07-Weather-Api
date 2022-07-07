@@ -12,9 +12,22 @@ class CityRepository {
     }
 
     async findCities(city) {
-       const response = await 
-       axios.get(`${this.pathBase}${city}.json?limit=${this.limit}&language=${this.language}&access_token=${this.apiKey}`);
-       return response.data; 
+       
+       try{
+        const instance = axios.create({
+            baseURL: `${this.pathBase}${city}.json`,
+            params: {
+                limit:this.limit,
+                language:this.language,
+                access_token:this.apiKey
+            } ,
+            });
+            const response = await instance.get();
+           return response.data;
+       }catch (err){
+           throw err;
+       }
+        
     }
 
 }

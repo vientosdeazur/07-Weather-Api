@@ -1,16 +1,27 @@
 const express = require ('express');
-const CityRepository = require ('../repositories/cityRepository');
+const Success = require ('../helpers/successHelper');
+const {findCities} = require ('../services/city.service');
+const {weatherByCoords} = require ('../services/weather.service');
 
-const repository = new CityRepository();
+
+const weather = async (req, res) => {
+    const {lon,lat} = req.query;
+    const weather =  await weatherByCoords(lon,lat);
+    const success = new Success(weather);
+    res.json(success);
+    
+}
 
 const cities = async (req, res) => {
-    res.json(await repository.findCities(req.params.city));
+    const cities =  await findCities(req.params.city);
+    const success = new Success(cities);
+    res.json(success);
     
 }
 
 
 
-
 module.exports = {
-    cities
+    cities,
+    weather,
 }
